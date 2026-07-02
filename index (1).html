@@ -1,0 +1,1075 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <base target="_self">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مترجم فوري + بنك كلمات ذكي</title>
+    <meta name="description" content="ترجمة فورية مع بنك كلمات ذكي: فهرسة تلقائية حسب المجال والتاريخ، مع أمثلة ومرادفات ومشتقات لكل كلمة.">
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-light: #818CF8;
+            --primary-dark: #3730A3;
+            --surface: #FFFFFF;
+            --bg: #F0F4FF;
+            --text: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --shadow: 0 4px 24px rgba(79, 70, 229, 0.10);
+            --radius: 16px;
+        }
+        * {
+            box-sizing: border-box;
+            scrollbar-width: thin;
+        }
+        body {
+            font-family: 'Segoe UI', 'Tahoma', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            color: var(--text-muted);
+            background: transparent;
+            border: none;
+        }
+        .btn-icon:hover {
+            background: rgba(79, 70, 229, 0.10);
+            color: var(--primary);
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.30);
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        .panel {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 200px;
+        }
+        .textarea-wrap {
+            position: relative;
+            flex: 1;
+            min-height: 120px;
+        }
+        .textarea-wrap textarea {
+            width: 100%;
+            height: 100%;
+            min-height: 120px;
+            resize: vertical;
+            border: none;
+            background: transparent;
+            padding: 16px 16px 44px 16px;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text);
+            font-family: inherit;
+            outline: none;
+        }
+        .textarea-wrap .controls {
+            position: absolute;
+            bottom: 6px;
+            right: 8px;
+            left: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .lang-select {
+            appearance: none;
+            background: transparent;
+            border: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            padding: 4px 28px 4px 8px;
+            border-radius: 40px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748B' d='M1.41.59 6 5.17 10.59.59 12 2l-6 6-6-6z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 8px center;
+            background-size: 10px;
+            min-width: 100px;
+            text-align: right;
+        }
+        .swap-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+        .swap-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            transform: rotate(180deg);
+        }
+        .badge {
+            font-size: 0.7rem;
+            background: rgba(79, 70, 229, 0.08);
+            color: var(--primary);
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #fff;
+            border-radius: 24px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            padding: 24px;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px 8px;
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+        .modal-close:hover {
+            background: #F1F5F9;
+            color: #1E293B;
+        }
+        .word-card {
+            background: #F8FAFC;
+            border-radius: 16px;
+            padding: 12px 16px;
+            border: 1px solid #E2E8F0;
+            transition: 0.2s;
+        }
+        .word-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 2px 12px rgba(79, 70, 229, 0.08);
+        }
+        .word-card .meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .word-card .examples {
+            font-size: 0.85rem;
+            background: #fff;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-top: 6px;
+            border-right: 3px solid var(--primary-light);
+        }
+        .word-card .synonyms span {
+            display: inline-block;
+            background: #E0E7FF;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin: 2px;
+            color: #3730A3;
+        }
+        .word-card .derivatives span {
+            display: inline-block;
+            background: #D1FAE5;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin: 2px;
+            color: #065F46;
+        }
+        .filter-btn {
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            border: 1px solid #CBD5E1;
+            background: #fff;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .filter-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1E293B;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 999;
+            pointer-events: none;
+        }
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        @media (max-width: 767px) {
+            .panels-wrapper {
+                flex-direction: column;
+            }
+            .swap-btn {
+                align-self: center;
+                margin: -8px 0;
+                transform: rotate(90deg);
+            }
+            .swap-btn:hover {
+                transform: rotate(270deg);
+            }
+            .modal-content {
+                padding: 16px;
+                max-height: 90vh;
+            }
+        }
+        .fade-in {
+            animation: fadeIn 0.25s ease;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="bg-gradient-to-l from-indigo-600 via-indigo-500 to-purple-600 text-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-xl">
+                    <i class="fas fa-language"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">مترجم فوري</h1>
+                    <p class="text-xs text-white/70 -mt-0.5">بنك كلمات ذكي</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="openWordBankBtn" class="btn-primary text-sm px-4 py-2" style="background:rgba(255,255,255,0.18);color:white;box-shadow:none;">
+                    <i class="fas fa-book ml-1"></i> بنك الكلمات
+                    <span id="wordCountBadge" class="bg-white/30 text-white rounded-full px-2 py-0.5 text-xs">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="flex-1 max-w-6xl mx-auto w-full px-4 py-6 md:py-10">
+        <div class="panels-wrapper flex gap-2 md:gap-4 items-stretch relative">
+
+            <!-- SOURCE -->
+            <div class="panel flex-1">
+                <div class="flex items-center justify-between px-4 pt-3 pb-1 border-b border-gray-100">
+                    <select class="lang-select" id="sourceLang">
+                        <!-- rendered -->
+                    </select>
+                    <span id="detectedBadge" class="badge" style="display:none;"></span>
+                </div>
+                <div class="textarea-wrap">
+                    <textarea id="sourceText" placeholder="اكتب النص هنا..." dir="auto"></textarea>
+                    <div class="controls">
+                        <span id="sourceChars" class="text-xs text-gray-400">0</span>
+                        <div class="flex gap-1">
+                            <button class="btn-icon text-sm" data-action="clear-source"><i class="fas fa-times"></i></button>
+                            <button class="btn-icon text-sm" data-action="copy-source"><i class="fas fa-copy"></i></button>
+                            <button class="btn-icon text-sm" data-action="speak-source"><i class="fas fa-volume-up"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SWAP -->
+            <button class="swap-btn" id="swapBtn"><i class="fas fa-exchange-alt"></i></button>
+
+            <!-- TARGET -->
+            <div class="panel flex-1">
+                <div class="flex items-center justify-between px-4 pt-3 pb-1 border-b border-gray-100">
+                    <select class="lang-select" id="targetLang">
+                        <!-- rendered -->
+                    </select>
+                    <span id="translatingBadge" class="badge" style="display:none;"><span class="spinner"></span> جاري الترجمة</span>
+                </div>
+                <div class="textarea-wrap">
+                    <textarea id="targetText" placeholder="ستظهر الترجمة هنا..." dir="auto" readonly></textarea>
+                    <div class="controls">
+                        <div class="flex gap-1">
+                            <button class="btn-icon text-sm" data-action="copy-target"><i class="fas fa-copy"></i></button>
+                            <button class="btn-icon text-sm" data-action="speak-target"><i class="fas fa-volume-up"></i></button>
+                            <button class="btn-icon text-sm" data-action="clear-target"><i class="fas fa-eraser"></i></button>
+                        </div>
+                        <button id="translateBtn" class="btn-primary text-xs py-1.5 px-4">
+                            <i class="fas fa-arrow-left"></i> ترجم
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AUTO TOGGLE -->
+        <div class="flex items-center justify-center gap-4 mt-5 flex-wrap">
+            <label class="flex items-center gap-2 cursor-pointer select-none text-sm text-gray-600">
+                <input type="checkbox" id="autoTranslate" checked class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                <span><i class="fas fa-sync-alt ml-1 text-xs"></i> ترجمة تلقائية + حفظ بنك الكلمات</span>
+            </label>
+        </div>
+    </main>
+
+    <!-- WORD BANK MODAL -->
+    <div class="modal-overlay" id="wordBankModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeWordBank"><i class="fas fa-times"></i></button>
+            <h2 class="text-xl font-bold mb-1"><i class="fas fa-book ml-2 text-indigo-600"></i> بنك الكلمات</h2>
+            <p class="text-sm text-gray-500 mb-4">الكلمات المحفوظة تلقائياً مع التصنيف الذكي</p>
+
+            <!-- filters -->
+            <div class="flex flex-wrap gap-2 mb-4" id="filterContainer">
+                <button class="filter-btn active" data-filter="all">الكل</button>
+                <!-- dynamic category filters -->
+            </div>
+            <div class="flex items-center justify-between mb-3">
+                <span id="wordBankCount" class="text-sm text-gray-400">0 كلمة</span>
+                <button id="clearWordBank" class="text-xs text-red-500 hover:text-red-700"><i class="fas fa-trash ml-1"></i>مسح الكل</button>
+            </div>
+            <div id="wordBankList" class="space-y-3">
+                <!-- word cards rendered here -->
+            </div>
+            <div id="wordBankEmpty" class="text-center py-10 text-gray-400 hidden">
+                <i class="fas fa-inbox text-3xl mb-2"></i>
+                <p>لم يتم حفظ أي كلمة بعد. ابدأ بالترجمة!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-gray-200 py-3 text-center text-xs text-gray-400">
+        <div class="max-w-6xl mx-auto px-4">
+            مترجم فوري + بنك كلمات © 2025 — ترجمة عبر MyMemory &amp; Datamuse
+        </div>
+    </footer>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ================================================================
+        //  1. DATA LAYER
+        // ================================================================
+
+        const languages = [
+            { code: 'auto', name: 'Auto Detect', nativeName: 'اكتشاف تلقائي' },
+            { code: 'ar', name: 'Arabic', nativeName: 'العربية' },
+            { code: 'en', name: 'English', nativeName: 'English' },
+            { code: 'fr', name: 'French', nativeName: 'Français' },
+            { code: 'es', name: 'Spanish', nativeName: 'Español' },
+            { code: 'de', name: 'German', nativeName: 'Deutsch' },
+            { code: 'it', name: 'Italian', nativeName: 'Italiano' },
+            { code: 'pt', name: 'Portuguese', nativeName: 'Português' },
+            { code: 'ru', name: 'Russian', nativeName: 'Русский' },
+            { code: 'ja', name: 'Japanese', nativeName: '日本語' },
+            { code: 'ko', name: 'Korean', nativeName: '한국어' },
+            { code: 'zh-CN', name: 'Chinese (Simplified)', nativeName: '简体中文' },
+            { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी' },
+            { code: 'tr', name: 'Turkish', nativeName: 'Türkçe' },
+            { code: 'nl', name: 'Dutch', nativeName: 'Nederlands' },
+            { code: 'pl', name: 'Polish', nativeName: 'Polski' },
+            { code: 'sv', name: 'Swedish', nativeName: 'Svenska' },
+            { code: 'da', name: 'Danish', nativeName: 'Dansk' },
+            { code: 'fi', name: 'Finnish', nativeName: 'Suomi' },
+            { code: 'no', name: 'Norwegian', nativeName: 'Norsk' },
+            { code: 'cs', name: 'Czech', nativeName: 'Čeština' },
+            { code: 'ro', name: 'Romanian', nativeName: 'Română' },
+            { code: 'hu', name: 'Hungarian', nativeName: 'Magyar' },
+            { code: 'el', name: 'Greek', nativeName: 'Ελληνικά' },
+            { code: 'he', name: 'Hebrew', nativeName: 'עברית' },
+            { code: 'th', name: 'Thai', nativeName: 'ไทย' },
+            { code: 'vi', name: 'Vietnamese', nativeName: 'Tiếng Việt' },
+            { code: 'id', name: 'Indonesian', nativeName: 'Bahasa Indonesia' },
+            { code: 'ms', name: 'Malay', nativeName: 'Bahasa Melayu' },
+            { code: 'sw', name: 'Swahili', nativeName: 'Kiswahili' },
+            { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்' },
+            { code: 'te', name: 'Telugu', nativeName: 'తెలుగు' },
+            { code: 'bn', name: 'Bengali', nativeName: 'বাংলা' },
+            { code: 'ur', name: 'Urdu', nativeName: 'اردو' }
+        ];
+
+        // Deduplicate
+        const seen = new Set();
+        const uniqueLangs = [];
+        for (const l of languages) {
+            if (!seen.has(l.code)) { seen.add(l.code);
+                uniqueLangs.push(l); }
+        }
+
+        // ---------- WORD CATEGORY MAP ----------
+        const categoryMap = {
+            'plants': ['flower', 'tree', 'grass', 'leaf', 'seed', 'garden', 'plant', 'fruit', 'vegetable', 'root', 'stem',
+                'petal', 'bloom', 'rose', 'tulip', 'oak', 'pine', 'bush', 'herb', 'weed'
+            ],
+            'education': ['student', 'teacher', 'school', 'book', 'exam', 'study', 'learn', 'class', 'university',
+                'education', 'lesson', 'homework', 'lecture', 'course', 'degree', 'knowledge', 'teach', 'tutor',
+                'academy'
+            ],
+            'technology': ['computer', 'phone', 'internet', 'software', 'hardware', 'code', 'programming', 'data', 'app',
+                'website', 'email', 'server', 'network', 'digital', 'robot', 'AI', 'algorithm', 'database', 'cloud'
+            ],
+            'food': ['food', 'meal', 'breakfast', 'lunch', 'dinner', 'eat', 'drink', 'restaurant', 'recipe', 'cook',
+                'taste', 'delicious', 'hunger', 'thirst', 'fruit', 'vegetable', 'meat', 'bread', 'rice', 'pasta'
+            ],
+            'health': ['health', 'doctor', 'hospital', 'medicine', 'patient', 'disease', 'exercise', 'fitness', 'nurse',
+                'clinic', 'pharmacy', 'surgery', 'therapy', 'wellness', 'vitamin', 'diet', 'illness'
+            ],
+            'business': ['business', 'company', 'job', 'work', 'money', 'salary', 'market', 'trade', 'economy', 'finance',
+                'investment', 'profit', 'loss', 'manager', 'employee', 'client', 'contract', 'project', 'meeting'
+            ],
+            'travel': ['travel', 'trip', 'flight', 'hotel', 'airport', 'vacation', 'destination', 'tourist', 'journey',
+                'suitcase', 'passport', 'visa', 'ticket', 'map', 'adventure', 'explore', 'cruise', 'backpack'
+            ],
+            'nature': ['nature', 'animal', 'bird', 'fish', 'mountain', 'river', 'ocean', 'forest', 'sky', 'sun', 'moon',
+                'star', 'rain', 'snow', 'wind', 'climate', 'environment', 'earth', 'water', 'fire'
+            ],
+            'science': ['science', 'chemistry', 'physics', 'biology', 'experiment', 'lab', 'research', 'scientist',
+                'theory', 'equation', 'element', 'molecule', 'gravity', 'energy', 'cell', 'genetic'
+            ],
+            'art': ['art', 'music', 'paint', 'draw', 'song', 'dance', 'theater', 'artist', 'musician', 'canvas', 'brush',
+                'melody', 'rhythm', 'poem', 'sculpture', 'exhibition', 'gallery', 'design'
+            ],
+            'sports': ['sport', 'football', 'soccer', 'game', 'team', 'player', 'match', 'coach', 'ball', 'goal', 'race',
+                'swim', 'run', 'jump', 'training', 'champion', 'league', 'stadium'
+            ],
+            'home': ['home', 'house', 'room', 'furniture', 'kitchen', 'bathroom', 'bedroom', 'garden', 'door', 'window',
+                'table', 'chair', 'bed', 'lamp', 'carpet', 'curtain', 'balcony', 'floor'
+            ],
+            'people': ['people', 'family', 'friend', 'parent', 'child', 'man', 'woman', 'brother', 'sister', 'husband',
+                'wife', 'neighbor', 'colleague', 'community', 'society', 'human', 'person'
+            ],
+            'emotions': ['happy', 'sad', 'angry', 'love', 'hate', 'fear', 'joy', 'excited', 'nervous', 'calm', 'proud',
+                'lonely', 'grateful', 'anxious', 'confident', 'brave', 'kind', 'generous'
+            ],
+            'clothing': ['clothing', 'shirt', 'pants', 'dress', 'shoes', 'hat', 'coat', 'jacket', 'socks', 'tie', 'belt',
+                'fashion', 'wear', 'outfit', 'uniform', 'jeans', 't-shirt'
+            ],
+            'time': ['time', 'day', 'night', 'morning', 'evening', 'hour', 'minute', 'second', 'week', 'month', 'year',
+                'clock', 'calendar', 'date', 'today', 'tomorrow', 'yesterday', 'now', 'later'
+            ]
+        };
+
+        // Invert map for quick lookup
+        const wordCategory = {};
+        for (const [cat, words] of Object.entries(categoryMap)) {
+            for (const w of words) {
+                wordCategory[w] = cat;
+            }
+        }
+
+        function getCategory(word) {
+            const lower = word.toLowerCase().trim();
+            if (wordCategory[lower]) return wordCategory[lower];
+            // Try partial match for compound words? skip.
+            return 'عام';
+        }
+
+        // ---------- WORD BANK ----------
+        let wordBank = [];
+
+        function loadWordBank() {
+            try {
+                const stored = localStorage.getItem('wordBank_v2');
+                if (stored) wordBank = JSON.parse(stored);
+                else wordBank = [];
+            } catch { wordBank = []; }
+            updateWordCountBadge();
+        }
+
+        function saveWordBank() {
+            localStorage.setItem('wordBank_v2', JSON.stringify(wordBank));
+            updateWordCountBadge();
+        }
+
+        function updateWordCountBadge() {
+            document.getElementById('wordCountBadge').textContent = wordBank.length;
+        }
+
+        // ---------- STATE ----------
+        const state = {
+            sourceLang: 'auto',
+            targetLang: 'en',
+            sourceText: '',
+            targetText: '',
+            isTranslating: false,
+            autoTranslate: true,
+            detectedLang: null,
+            currentFilter: 'all'
+        };
+
+        // ================================================================
+        //  2. RENDER FUNCTIONS
+        // ================================================================
+
+        function renderLanguageOptions(selectedCode) {
+            return uniqueLangs.map(l => {
+                const sel = l.code === selectedCode ? 'selected' : '';
+                const label = l.code === 'auto' ? l.nativeName : `${l.nativeName} (${l.name})`;
+                return `<option value="${l.code}" ${sel}>${label}</option>`;
+            }).join('');
+        }
+
+        function renderCategoryFilters(activeFilter) {
+            const categories = [...new Set(wordBank.map(w => w.category))].sort();
+            let html = `<button class="filter-btn ${activeFilter === 'all' ? 'active' : ''}" data-filter="all">الكل</button>`;
+            for (const cat of categories) {
+                const count = wordBank.filter(w => w.category === cat).length;
+                html +=
+                    `<button class="filter-btn ${activeFilter === cat ? 'active' : ''}" data-filter="${cat}">${cat} (${count})</button>`;
+            }
+            return html;
+        }
+
+        function renderWordCards(words, filter) {
+            if (!words.length) {
+                document.getElementById('wordBankEmpty').classList.remove('hidden');
+                document.getElementById('wordBankList').innerHTML = '';
+                document.getElementById('wordBankCount').textContent = '0 كلمة';
+                return;
+            }
+            document.getElementById('wordBankEmpty').classList.add('hidden');
+
+            const filtered = filter === 'all' ? words : words.filter(w => w.category === filter);
+            document.getElementById('wordBankCount').textContent = filtered.length + ' كلمة';
+
+            if (!filtered.length) {
+                document.getElementById('wordBankList').innerHTML =
+                    `<p class="text-gray-400 text-center py-6">لا توجد كلمات في هذا التصنيف</p>`;
+                return;
+            }
+
+            const html = filtered.map((w, idx) => {
+                const dateStr = new Date(w.date).toLocaleDateString('ar-SA', { year: 'numeric', month: 'short',
+                    day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                const examples = w.examples && w.examples.length ? w.examples.map(e =>
+                    `<div class="examples">📖 <strong>مثال:</strong> “${e}”</div>`).join('') : '';
+                const synonyms = w.synonyms && w.synonyms.length ?
+                    `<div class="synonyms mt-1"><span class="text-xs text-gray-500">مرادفات:</span> ${w.synonyms.map(s => `<span>${s}</span>`).join(' ')}</div>` :
+                    '';
+                const derivatives = w.derivatives && w.derivatives.length ?
+                    `<div class="derivatives mt-1"><span class="text-xs text-gray-500">مشتقات:</span> ${w.derivatives.map(d => `<span>${d}</span>`).join(' ')}</div>` :
+                    '';
+                return `
+                        <div class="word-card fade-in">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <strong class="text-lg">${w.word}</strong>
+                                    <span class="text-gray-500 mx-2">←</span>
+                                    <span class="text-indigo-600 font-medium">${w.translation}</span>
+                                </div>
+                                <div class="text-left">
+                                    <span class="badge">${w.category}</span>
+                                    <div class="meta mt-1">${dateStr}</div>
+                                </div>
+                            </div>
+                            ${examples}
+                            ${synonyms}
+                            ${derivatives}
+                            <div class="flex gap-2 mt-2">
+                                <button class="text-xs text-red-400 hover:text-red-600" data-remove-word="${w.date}">🗑️ حذف</button>
+                            </div>
+                        </div>
+                    `;
+            }).join('');
+            document.getElementById('wordBankList').innerHTML = html;
+        }
+
+        // ================================================================
+        //  3. MOUNT
+        // ================================================================
+
+        function mount() {
+            document.getElementById('sourceLang').innerHTML = renderLanguageOptions(state.sourceLang);
+            document.getElementById('targetLang').innerHTML = renderLanguageOptions(state.targetLang);
+            document.getElementById('autoTranslate').checked = state.autoTranslate;
+            loadWordBank();
+            renderWordCards(wordBank, state.currentFilter);
+            document.getElementById('filterContainer').innerHTML = renderCategoryFilters(state.currentFilter);
+            document.getElementById('sourceText').value = state.sourceText;
+            document.getElementById('targetText').value = state.targetText;
+            updateCounts();
+        }
+
+        function updateCounts() {
+            const src = document.getElementById('sourceText').value;
+            document.getElementById('sourceChars').textContent = src.length;
+        }
+
+        // ================================================================
+        //  4. WORD ENRICHMENT & BANK ADD
+        // ================================================================
+
+        async function enrichWord(word, translation, sourceLang, targetLang) {
+            // word: source text (single word)
+            const lower = word.toLowerCase().trim();
+            const category = getCategory(lower);
+
+            let examples = [];
+            let synonyms = [];
+            let derivatives = [];
+
+            // Fetch examples from MyMemory (already have some in response? we'll fetch again)
+            try {
+                const url =
+                    `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=${sourceLang}|${targetLang}`;
+                const resp = await fetch(url);
+                const data = await resp.json();
+                if (data.responseStatus === 200 && data.matches) {
+                    examples = data.matches
+                        .filter(m => m.segment && m.translation)
+                        .slice(0, 3)
+                        .map(m => `${m.segment} → ${m.translation}`);
+                }
+            } catch { /* ignore */ }
+
+            // Fetch synonyms from Datamuse
+            try {
+                const synResp = await fetch(`https://api.datamuse.com/words?rel_syn=${encodeURIComponent(lower)}&max=5`);
+                if (synResp.ok) {
+                    const synData = await synResp.json();
+                    synonyms = synData.map(s => s.word).filter(s => s !== lower);
+                }
+            } catch { /* ignore */ }
+
+            // Fetch derivatives (words starting with same root) using prefix search
+            try {
+                const derResp = await fetch(
+                    `https://api.datamuse.com/words?sp=${encodeURIComponent(lower)}*&md=d&max=6`);
+                if (derResp.ok) {
+                    const derData = await derResp.json();
+                    derivatives = derData.map(d => d.word).filter(d => d !== lower && !d.startsWith(lower +
+                    lower)); // avoid duplicates
+                }
+            } catch { /* ignore */ }
+
+            return { category, examples, synonyms, derivatives };
+        }
+
+        async function addToWordBank(word, translation, sourceLang, targetLang) {
+            if (!word || !translation) return;
+            // Only add single words (no spaces)
+            if (word.trim().split(/\s+/).length > 1) return;
+
+            // Check if already exists (by word+translation)
+            const exists = wordBank.some(w => w.word === word.trim() && w.translation === translation.trim());
+            if (exists) return;
+
+            const enrichment = await enrichWord(word, translation, sourceLang, targetLang);
+
+            const entry = {
+                word: word.trim(),
+                translation: translation.trim(),
+                sourceLang: sourceLang,
+                targetLang: targetLang,
+                category: enrichment.category,
+                date: new Date().toISOString(),
+                examples: enrichment.examples,
+                synonyms: enrichment.synonyms,
+                derivatives: enrichment.derivatives
+            };
+
+            wordBank.push(entry);
+            saveWordBank();
+            renderWordCards(wordBank, state.currentFilter);
+            document.getElementById('filterContainer').innerHTML = renderCategoryFilters(state.currentFilter);
+            showToast(`📝 تم حفظ "${word}" في بنك الكلمات (${enrichment.category})`);
+        }
+
+        // ================================================================
+        //  5. TRANSLATION ENGINE
+        // ================================================================
+
+        async function performTranslation() {
+            const sourceText = document.getElementById('sourceText').value.trim();
+            const sourceLang = document.getElementById('sourceLang').value;
+            const targetLang = document.getElementById('targetLang').value;
+
+            if (!sourceText) {
+                document.getElementById('targetText').value = '';
+                document.getElementById('translatingBadge').style.display = 'none';
+                updateCounts();
+                return;
+            }
+
+            if (state.isTranslating) return;
+            state.isTranslating = true;
+            const badge = document.getElementById('translatingBadge');
+            badge.style.display = 'inline-flex';
+            document.getElementById('translateBtn').disabled = true;
+
+            try {
+                const langpair = sourceLang === 'auto' ? `auto|${targetLang}` : `${sourceLang}|${targetLang}`;
+                const url =
+                    `https://api.mymemory.translated.net/get?q=${encodeURIComponent(sourceText)}&langpair=${langpair}`;
+                const resp = await fetch(url);
+                const data = await resp.json();
+
+                if (data.responseStatus === 200) {
+                    let translated = data.responseData.translatedText || '';
+                    translated = translated.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+                        .replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+
+                    document.getElementById('targetText').value = translated;
+                    state.targetText = translated;
+
+                    if (sourceLang === 'auto' && data.responseData.detectedLanguage) {
+                        state.detectedLang = data.responseData.detectedLanguage;
+                        const langObj = uniqueLangs.find(l => l.code === state.detectedLang);
+                        const badge = document.getElementById('detectedBadge');
+                        if (langObj) {
+                            badge.textContent = langObj.nativeName;
+                            badge.style.display = 'inline-block';
+                        } else {
+                            badge.style.display = 'none';
+                        }
+                    } else {
+                        document.getElementById('detectedBadge').style.display = 'none';
+                    }
+
+                    // Auto-add to word bank if single word
+                    if (state.autoTranslate && sourceText.split(/\s+/).length === 1) {
+                        await addToWordBank(sourceText, translated, sourceLang, targetLang);
+                    }
+                } else {
+                    throw new Error(data.responseDetails || 'خطأ');
+                }
+            } catch (err) {
+                console.error(err);
+                // Fallback mock
+                const fallback = `[${sourceLang}→${targetLang}] ` + sourceText.split('').reverse().join('');
+                document.getElementById('targetText').value = fallback;
+                state.targetText = fallback;
+                if (state.autoTranslate && sourceText.split(/\s+/).length === 1) {
+                    await addToWordBank(sourceText, fallback, sourceLang, targetLang);
+                }
+                showToast('⚠️ تم استخدام ترجمة تجريبية');
+            } finally {
+                state.isTranslating = false;
+                badge.style.display = 'none';
+                document.getElementById('translateBtn').disabled = false;
+                updateCounts();
+            }
+        }
+
+        let debounceTimer = null;
+
+        function scheduleTranslation() {
+            if (!state.autoTranslate) return;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(performTranslation, 700);
+        }
+
+        // ================================================================
+        //  6. EVENT DELEGATION
+        // ================================================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            mount();
+
+            // --- Global click delegation ---
+            document.addEventListener('click', function(e) {
+                const btn = e.target.closest('button');
+                if (!btn) return;
+                const action = btn.dataset.action;
+                const filter = btn.dataset.filter;
+                const removeDate = btn.dataset.removeWord;
+
+                // Remove word from bank
+                if (removeDate) {
+                    e.preventDefault();
+                    wordBank = wordBank.filter(w => w.date !== removeDate);
+                    saveWordBank();
+                    renderWordCards(wordBank, state.currentFilter);
+                    document.getElementById('filterContainer').innerHTML = renderCategoryFilters(state.currentFilter);
+                    showToast('🗑️ تم حذف الكلمة');
+                    return;
+                }
+
+                // Category filter
+                if (filter) {
+                    e.preventDefault();
+                    state.currentFilter = filter;
+                    document.querySelectorAll('.filter-btn').forEach(f => f.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderWordCards(wordBank, filter);
+                    return;
+                }
+
+                switch (action) {
+                    case 'clear-source':
+                        document.getElementById('sourceText').value = '';
+                        document.getElementById('targetText').value = '';
+                        state.sourceText = '';
+                        state.targetText = '';
+                        document.getElementById('detectedBadge').style.display = 'none';
+                        updateCounts();
+                        showToast('🗑️ تم المسح');
+                        break;
+                    case 'clear-target':
+                        document.getElementById('targetText').value = '';
+                        state.targetText = '';
+                        updateCounts();
+                        break;
+                    case 'copy-source':
+                        copyText(document.getElementById('sourceText').value);
+                        break;
+                    case 'copy-target':
+                        copyText(document.getElementById('targetText').value);
+                        break;
+                    case 'speak-source':
+                        speakNow(document.getElementById('sourceText').value, document.getElementById('sourceLang')
+                        .value);
+                        break;
+                    case 'speak-target':
+                        speakNow(document.getElementById('targetText').value, document.getElementById('targetLang')
+                        .value);
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+            // Swap languages
+            document.getElementById('swapBtn').addEventListener('click', function() {
+                const srcSel = document.getElementById('sourceLang');
+                const tgtSel = document.getElementById('targetLang');
+                const srcText = document.getElementById('sourceText');
+                const tgtText = document.getElementById('targetText');
+
+                if (srcSel.value === 'auto') {
+                    showToast('⚠️ لا يمكن التبديل مع الكشف التلقائي');
+                    return;
+                }
+                const tempLang = srcSel.value;
+                const tempText = srcText.value;
+                srcSel.value = tgtSel.value;
+                tgtSel.value = tempLang;
+                srcText.value = tgtText.value;
+                tgtText.value = tempText;
+                state.sourceLang = srcSel.value;
+                state.targetLang = tgtSel.value;
+                state.sourceText = srcText.value;
+                state.targetText = tgtText.value;
+                document.getElementById('detectedBadge').style.display = 'none';
+                updateCounts();
+                if (state.autoTranslate && srcText.value.trim()) performTranslation();
+                showToast('🔄 تم تبديل اللغات');
+            });
+
+            // Translate button
+            document.getElementById('translateBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                performTranslation();
+            });
+
+            // Input
+            document.getElementById('sourceText').addEventListener('input', function(e) {
+                state.sourceText = e.target.value;
+                updateCounts();
+                if (state.autoTranslate) {
+                    scheduleTranslation();
+                } else {
+                    document.getElementById('targetText').value = '';
+                    state.targetText = '';
+                }
+                if (!e.target.value) {
+                    document.getElementById('detectedBadge').style.display = 'none';
+                    document.getElementById('targetText').value = '';
+                }
+            });
+
+            // Language change
+            document.getElementById('sourceLang').addEventListener('change', function(e) {
+                state.sourceLang = e.target.value;
+                if (e.target.value !== 'auto') document.getElementById('detectedBadge').style.display = 'none';
+                if (state.autoTranslate && document.getElementById('sourceText').value.trim()) performTranslation();
+            });
+            document.getElementById('targetLang').addEventListener('change', function(e) {
+                state.targetLang = e.target.value;
+                if (state.autoTranslate && document.getElementById('sourceText').value.trim()) performTranslation();
+            });
+
+            // Auto-translate checkbox
+            document.getElementById('autoTranslate').addEventListener('change', function(e) {
+                state.autoTranslate = e.target.checked;
+                if (state.autoTranslate && document.getElementById('sourceText').value.trim()) performTranslation();
+            });
+
+            // Word bank modal
+            document.getElementById('openWordBankBtn').addEventListener('click', function() {
+                document.getElementById('wordBankModal').classList.add('active');
+                renderWordCards(wordBank, state.currentFilter);
+                document.getElementById('filterContainer').innerHTML = renderCategoryFilters(state.currentFilter);
+            });
+            document.getElementById('closeWordBank').addEventListener('click', function() {
+                document.getElementById('wordBankModal').classList.remove('active');
+            });
+            document.getElementById('wordBankModal').addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+
+            // Clear all word bank
+            document.getElementById('clearWordBank').addEventListener('click', function() {
+                if (wordBank.length === 0) return;
+                if (confirm('هل تريد مسح جميع الكلمات المحفوظة؟')) {
+                    wordBank = [];
+                    saveWordBank();
+                    renderWordCards(wordBank, state.currentFilter);
+                    document.getElementById('filterContainer').innerHTML = renderCategoryFilters(state.currentFilter);
+                    showToast('🗑️ تم مسح بنك الكلمات');
+                }
+            });
+
+            // Keyboard shortcut Ctrl+Enter
+            document.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    performTranslation();
+                }
+            });
+
+            console.log('✅ مترجم + بنك كلمات ذكي جاهز');
+        });
+
+        // ================================================================
+        //  7. HELPERS
+        // ================================================================
+
+        async function copyText(text) {
+            if (!text) { showToast('⚠️ لا يوجد نص'); return; }
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast('📋 تم النسخ');
+            } catch {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                showToast('📋 تم النسخ');
+            }
+        }
+
+        function speakNow(text, lang) {
+            if (!text) { showToast('⚠️ لا يوجد نص'); return; }
+            if (!window.speechSynthesis) { showToast('⚠️ المتصفح لا يدعم'); return; }
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(text);
+            const map = {
+                'auto': 'en',
+                'ar': 'ar-SA',
+                'en': 'en-US',
+                'fr': 'fr-FR',
+                'es': 'es-ES',
+                'de': 'de-DE',
+                'it': 'it-IT',
+                'pt': 'pt-PT',
+                'ru': 'ru-RU',
+                'ja': 'ja-JP',
+                'ko': 'ko-KR',
+                'zh-CN': 'zh-CN',
+                'hi': 'hi-IN',
+                'tr': 'tr-TR'
+            };
+            u.lang = map[lang] || 'en-US';
+            u.rate = 0.9;
+            window.speechSynthesis.speak(u);
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(t._hide);
+            t._hide = setTimeout(() => t.classList.remove('show'), 2800);
+        }
+    </script>
+</body>
+</html>
